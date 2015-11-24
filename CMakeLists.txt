@@ -1,27 +1,27 @@
 cmake_minimum_required (VERSION 3.0)
 project (openair)
 
-# set up Boost
-if (NOT DEFINED BOOST_ROOT AND
-    NOT DEFINED ENV{BOOST_ROOT} AND
-    NOT DEFINED BOOST_INCLUDEDIR AND
-    NOT DEFINED ENV{BOOST_INCLUDEDIR} AND
-    NOT DEFINED BOOST_LIBRARYDIR AND
-    NOT DEFINED ENV{BOOST_LIBRARYDIR})
-    
-    set(BOOST_ROOT "libs/boost")
-
-endif()
-
-if (APPLE OR WIN32)
-    set(Boost_USE_STATIC_LIBS TRUE)
-endif()
+## set up Boost
+#if (NOT DEFINED BOOST_ROOT AND
+#    NOT DEFINED ENV{BOOST_ROOT} AND
+#    NOT DEFINED BOOST_INCLUDEDIR AND
+#    NOT DEFINED ENV{BOOST_INCLUDEDIR} AND
+#    NOT DEFINED BOOST_LIBRARYDIR AND
+#    NOT DEFINED ENV{BOOST_LIBRARYDIR})
+#
+#    set(BOOST_ROOT "libs/boost")
+#
+#endif()
+#
+#if (APPLE OR WIN32)
+#    set(Boost_USE_STATIC_LIBS TRUE)
+#endif()
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-find_package(Boost 1.55 REQUIRED COMPONENTS thread system
-)
+#find_package(Boost 1.55 REQUIRED COMPONENTS thread system
+#)
 
 # version number
 set (OPENAIR_VERSION_MAJOR 0)

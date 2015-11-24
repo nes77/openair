@@ -35,7 +35,7 @@ namespace openair {
         std::mutex output_lock;
 
         for (size_t i = 0; i < max_cpu; i++) {
-            thread_pool.emplace_back([&]() -> void{
+            thread_pool.emplace_back([&]() -> void {
                 while(true) {
                     ForwardIterator it;
                     {
@@ -58,6 +58,53 @@ namespace openair {
                     }
 
                     *ot = func(*it);
+
+                }
+            });
+        }
+
+        for (size_t i = 0; i < max_cpu; i++) {
+            thread_pool[i].join();
+        }
+
+    };
+
+    template <typename Predicate, typename ForwardIterator, typename OutputIterator>
+    void parallel_filter_unordered(Predicate pred,
+                                  ForwardIterator begin,
+                                  ForwardIterator end,
+                                  OutputIterator o_begin,
+                                  size_t max_cpu = 4) {
+
+        std::vector<std::thread> thread_pool;
+        std::mutex input_lock;
+        std::mutex output_lock;
+
+        for (size_t i = 0; i < max_cpu; i++) {
+            thread_pool.emplace_back([&]() -> void {
+                while(true) {
+                    ForwardIterator it;
+                    {
+                        std::unique_lock<std::mutex> lock(input_lock);
+                        if (begin != end) {
+                            it = begin;
+                            begin++;
+                        } else {
+                            return;
+                        }
+                        lock.unlock();
+                    }
+
+                    if (!pred(*it)) {
+                        continue;
+                    }
+
+                    {
+                        std::unique_lock<std::mutex> lock(output_lock);
+                        *o_begin = *it;
+                        o_begin++;
+                        lock.unlock();
+                    }
 
                 }
             });
