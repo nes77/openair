@@ -41,10 +41,15 @@ include_directories(src ${Boost_INCLUDE_DIRS})
 #message("PROJECT_SOURCE_DIR points to " ${PROJECT_SOURCE_DIR})
 
 add_library(openair-core
-    SHARED
-    src/libopenair/airplane.cpp
-    src/libopenair/sqlite3.c
-)
+        SHARED
+        src/libopenair/airplane.cpp
+        src/libopenair/parallel.hpp
+        src/libopenair/common.hpp
+        src/libopenair/sqlite3.c
+        src/libopenair/sqlite3.h
+        src/libopenair/sqlite3pp.cpp
+        src/libopenair/sqlite3pp.hpp
+        )
 
 add_executable(openair-test 
     src/openair/openair_test.cpp

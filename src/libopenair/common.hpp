@@ -16,6 +16,7 @@
 
 #include <memory>
 #include <cinttypes>
+#include <functional>
 
 
 #endif /* COMMON_HPP */
