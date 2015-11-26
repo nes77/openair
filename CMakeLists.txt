@@ -13,9 +13,8 @@ project (openair)
 #
 #endif()
 #
-#if (APPLE OR WIN32)
-#    set(Boost_USE_STATIC_LIBS TRUE)
-#endif()
+if (NOT WIN32)
+
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -23,13 +22,17 @@ find_package(Threads REQUIRED)
 #find_package(Boost 1.55 REQUIRED COMPONENTS thread system
 #)
 
+set (COMP_FLAGS "-g -Werror -Wall -Wno-reorder -std=c++11")
+
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMP_FLAGS}")
+
+endif()
+
 # version number
 set (OPENAIR_VERSION_MAJOR 0)
 set (OPENAIR_VERSION_MINOR 1)
 
-set (COMP_FLAGS "-g -Werror -Wall -Wno-reorder -std=c++11")
 
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMP_FLAGS}")
 
 configure_file (
     src/libopenair/openair_config.in.hpp
@@ -40,6 +43,7 @@ include_directories(src ${Boost_INCLUDE_DIRS})
 
 #message("PROJECT_SOURCE_DIR points to " ${PROJECT_SOURCE_DIR})
 
+if (NOT WIN32)
 add_library(openair-core
         SHARED
         src/libopenair/airplane.cpp
@@ -50,6 +54,18 @@ add_library(openair-core
         src/libopenair/sqlite3pp.cpp
         src/libopenair/sqlite3pp.hpp
         )
+else()
+add_library(openair-core
+        STATIC
+        src/libopenair/airplane.cpp
+        src/libopenair/parallel.hpp
+        src/libopenair/common.hpp
+        src/libopenair/sqlite3.c
+        src/libopenair/sqlite3.h
+        src/libopenair/sqlite3pp.cpp
+        src/libopenair/sqlite3pp.hpp
+        )
+endif()
 
 add_executable(openair-test 
     src/openair/openair_test.cpp
@@ -60,7 +76,11 @@ add_executable(openair-server
 )
 
 #message("Boost libs: " ${Boost_LIBRARIES})
-target_link_libraries(openair-core ${Boost_LIBRARIES} Threads::Threads)
+if(NOT WIN32)
+    target_link_libraries(openair-core ${Boost_LIBRARIES} Threads::Threads)
+else()
+    target_link_libraries(openair-core ${Boost_LIBRARIES})
+endif()
 target_link_libraries(openair-test openair-core ${Boost_LIBRARIES})
 target_link_libraries(openair-server openair-core ${Boost_LIBRARIES})
 
