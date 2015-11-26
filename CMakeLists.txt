@@ -75,6 +75,12 @@ add_executable(openair-server
     src/openair/openair_server.cpp
 )
 
+add_executable(sqlitepp-test
+
+        src/test/sqlitepp_test.cpp)
+
+set_source_files_properties(src/libopenair/sqlite3.c PROPERTIES COMPILE_FLAGS -DSQLITE_OMIT_LOAD_EXTENSION)
+
 #message("Boost libs: " ${Boost_LIBRARIES})
 if(NOT WIN32)
     target_link_libraries(openair-core ${Boost_LIBRARIES} Threads::Threads)
@@ -82,6 +88,7 @@ else()
     target_link_libraries(openair-core ${Boost_LIBRARIES})
 endif()
 target_link_libraries(openair-test openair-core ${Boost_LIBRARIES})
+target_link_libraries(sqlitepp-test openair-core ${Boost_LIBRARIES})
 target_link_libraries(openair-server openair-core ${Boost_LIBRARIES})
 
 enable_testing()

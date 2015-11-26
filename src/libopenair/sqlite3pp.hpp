@@ -16,7 +16,7 @@
 
 namespace openair {
 
-    typedef std::unique_ptr<sqlite3, std::function<void(sqlite3*)> > sqlite3_ptr;
+    typedef std::shared_ptr<sqlite3> sqlite3_ptr;
     typedef std::shared_ptr<sqlite3_stmt> sqlite3_stmt_ptr;
 
     class SQLiteValue;
@@ -24,7 +24,7 @@ namespace openair {
     class SQLiteConnection {
 
         sqlite3_ptr conn;
-        std::mutex connection_mutex;
+        std::shared_ptr<std::mutex> connection_mutex;
 
     public:
 

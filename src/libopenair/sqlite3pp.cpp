@@ -13,6 +13,8 @@ openair::SQLiteConnection::SQLiteConnection(std::string filename) {
     }
 
     this->conn = sqlite3_ptr(conn, sqlite3_close);
+    this->connection_mutex.reset(new std::mutex());
+
 }
 
 sqlite3 *openair::SQLiteConnection::get_raw_connection() {
@@ -347,7 +349,7 @@ void openair::SQLiteStatement::clear_bindings() {
 }
 
 std::unique_lock<std::mutex> openair::SQLiteConnection::get_conn_lock() {
-    return std::unique_lock<std::mutex>(this->connection_mutex);
+    return std::unique_lock<std::mutex>(*this->connection_mutex.get());
 }
 
 void openair::SQLiteConnection::backup_database(std::string filename, int n_pages) {
@@ -367,7 +369,7 @@ void openair::SQLiteConnection::backup_database(std::string filename, int n_page
     while (true) {
         int result = sqlite3_backup_step(backup_ptr, n_pages);
 
-        if (result != SQLITE_DONE){
+        if (result == SQLITE_DONE || result != SQLITE_OK){
             break;
         }
     }
