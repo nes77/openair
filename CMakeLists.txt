@@ -54,6 +54,8 @@ add_library(openair-core
         src/libopenair/sqlite3pp.cpp
         src/libopenair/sqlite3pp.hpp
         )
+
+set_source_files_properties(src/libopenair/sqlite3.c PROPERTIES COMPILE_FLAGS -DSQLITE_OMIT_LOAD_EXTENSION)
 else()
 add_library(openair-core
         STATIC
@@ -79,7 +81,7 @@ add_executable(sqlitepp-test
 
         src/test/sqlitepp_test.cpp)
 
-set_source_files_properties(src/libopenair/sqlite3.c PROPERTIES COMPILE_FLAGS -DSQLITE_OMIT_LOAD_EXTENSION)
+
 
 #message("Boost libs: " ${Boost_LIBRARIES})
 if(NOT WIN32)

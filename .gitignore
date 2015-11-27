@@ -6,6 +6,7 @@ nbproject
 cmake_install.cmake
 install_manifest.txt
 openair_config.hpp
+.idea
 
 # Compiled Object files
 *.slo

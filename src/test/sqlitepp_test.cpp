@@ -3,7 +3,6 @@
 //
 
 #include <iostream>
-#include <cstdio>
 #include "libopenair/sqlite3pp.hpp"
 
 std::string test_db_creation_string = R"(CREATE TABLE IF NOT EXISTS test_table(id INTEGER, name TEXT);)";

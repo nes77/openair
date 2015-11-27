@@ -35,7 +35,7 @@ uint64_t plus_one(uint64_t x){
 
 int main(int argc, const char **argv) {
     std::vector<uint64_t> test_vec;
-    for (uint64_t i = 0; i < 100000; i++) {
+    for (uint64_t i = 0; i < 100000000; i++) {
         test_vec.push_back(i);
     }
 
