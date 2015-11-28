@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.0)
 project (openair)
 
+#set(CMAKE_VERBOSE_MAKEFILE on)
+
 ## set up Boost
 #if (NOT DEFINED BOOST_ROOT AND
 #    NOT DEFINED ENV{BOOST_ROOT} AND
@@ -44,6 +46,8 @@ include_directories(src ${Boost_INCLUDE_DIRS})
 #message("PROJECT_SOURCE_DIR points to " ${PROJECT_SOURCE_DIR})
 
 if (NOT WIN32)
+
+    #include_directories(/usr/include/x86_64-linux-gnu)
 add_library(openair-core
         SHARED
         src/libopenair/airplane.cpp
@@ -53,9 +57,11 @@ add_library(openair-core
         src/libopenair/sqlite3.h
         src/libopenair/sqlite3pp.cpp
         src/libopenair/sqlite3pp.hpp
-        )
+        src/libopenair/network/linux.cpp src/libopenair/network/socket.hpp src/libopenair/network/socket.hpp)
 
 set_source_files_properties(src/libopenair/sqlite3.c PROPERTIES COMPILE_FLAGS -DSQLITE_OMIT_LOAD_EXTENSION)
+
+
 else()
 add_library(openair-core
         STATIC
@@ -66,7 +72,7 @@ add_library(openair-core
         src/libopenair/sqlite3.h
         src/libopenair/sqlite3pp.cpp
         src/libopenair/sqlite3pp.hpp
-        )
+        src/libopenair/network/linux.cpp src/libopenair/network/socket.hpp src/libopenair/network/socket.hpp)
 endif()
 
 add_executable(openair-test 
