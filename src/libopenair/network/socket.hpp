@@ -1,6 +1,6 @@
 //
 // socket.hpp
-// Cross-platform implementation of a BSD-like TCP Network Socket
+// Cross-platform implementation of a BSD-like TCP Network socket
 // Created by nsamson on 11/26/15.
 //
 
@@ -28,30 +28,51 @@ namespace openair {
     namespace network {
 
         enum class SocketType {
-            CLIENT, SERVER, EMPTY
+            CLIENT, SERVER
+        };
+
+        enum class IOType {
+            RD, WR, RDWR
         };
 
 #ifdef __linux__
 
 
-        class Socket {
+        class TCPSocket {
             std::shared_ptr<int> sockfd;
             SocketType sock_type;
+            bool _shutdown = false;
+            bool _closed = false;
 
 
-            Socket(int sockfd, SocketType type);
+            TCPSocket(int sockfd, SocketType type);
 
         public:
-            Socket();
 
-            Socket(std::string hostname, uint16_t port); // Client socket
-            Socket(uint16_t port, uint32_t max_queued_connections); // Server socket
+            TCPSocket(std::string hostname, uint16_t port); // Client socket
+            TCPSocket(uint16_t port, uint32_t max_queued_connections); // Server socket
+            ~TCPSocket();
 
-            static Socket loopback(uint16_t port);
+            static TCPSocket loopback(uint16_t port);
 
             SocketType get_type();
 
-            Socket accept(int timeout_millis = 0);
+            TCPSocket accept();
+
+            bool is_shutdown();
+
+            bool is_closed();
+
+            void shutdown(IOType type);
+
+            void close();
+
+            bool poll(IOType type, int timeout_millis = 0);
+
+            ssize_t recv(void *buf, size_t len, int flags);
+
+            ssize_t send(const void *buf, size_t len, int flags);
+
 
 
         };

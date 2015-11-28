@@ -84,8 +84,9 @@ add_executable(openair-server
 )
 
 add_executable(sqlitepp-test
-
         src/test/sqlitepp_test.cpp)
+
+add_executable(networking-test src/test/networking_test.cpp)
 
 
 
@@ -97,6 +98,7 @@ else()
 endif()
 target_link_libraries(openair-test openair-core ${Boost_LIBRARIES})
 target_link_libraries(sqlitepp-test openair-core ${Boost_LIBRARIES})
+target_link_libraries(networking-test openair-core ${Boost_LIBRARIES})
 target_link_libraries(openair-server openair-core ${Boost_LIBRARIES})
 
 enable_testing()
