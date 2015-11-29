@@ -21,6 +21,21 @@
 #include <netdb.h>
 #include <poll.h>
 
+#elif WIN32
+
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
+#ifndef ssize_t
+#define ssize_t int
+#endif
+
+#include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#pragma comment (lib, "Ws2_32.lib")
+
 #endif
 
 namespace openair {
@@ -35,17 +50,21 @@ namespace openair {
             RD, WR, RDWR
         };
 
-#ifdef __linux__
+
 
 
         class TCPSocket {
+#ifdef __linux__
             std::shared_ptr<int> sockfd;
+			TCPSocket(int sockfd, SocketType type);
+#elif (defined WIN32)
+			std::shared_ptr<SOCKET> socket;
+			TCPSocket(std::shared_ptr<SOCKET> socket, SocketType type);
+#endif
+
             SocketType sock_type;
-            bool _shutdown = false;
-            bool _closed = false;
-
-
-            TCPSocket(int sockfd, SocketType type);
+			std::shared_ptr<bool> _shutdown;
+			std::shared_ptr<bool> _closed;
 
         public:
 
@@ -53,19 +72,19 @@ namespace openair {
             TCPSocket(uint16_t port, uint32_t max_queued_connections); // Server socket
             ~TCPSocket();
 
-            static TCPSocket loopback(uint16_t port);
+            static TCPSocket loopback(uint16_t port); // System-independent
 
-            SocketType get_type();
+            SocketType get_type(); // System-independent
 
             TCPSocket accept();
 
-            bool is_shutdown();
+            bool is_shutdown(); // System-independent
 
-            bool is_closed();
+            bool is_closed(); // System-independent
 
             void shutdown(IOType type);
 
-            void close();
+            void close(); // System-independent
 
             bool poll(IOType type, int timeout_millis = 0);
 
@@ -76,8 +95,6 @@ namespace openair {
 
 
         };
-
-#endif
 
         class NetworkingException : public std::runtime_error {
 
