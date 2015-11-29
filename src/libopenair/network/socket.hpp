@@ -63,7 +63,6 @@ namespace openair {
 #endif
 
             SocketType sock_type;
-			std::shared_ptr<bool> _shutdown;
 			std::shared_ptr<bool> _closed;
 
         public:
@@ -77,8 +76,6 @@ namespace openair {
             SocketType get_type(); // System-independent
 
             TCPSocket accept();
-
-            bool is_shutdown(); // System-independent
 
             bool is_closed(); // System-independent
 

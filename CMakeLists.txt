@@ -57,7 +57,7 @@ add_library(openair-core
         src/libopenair/sqlite3.h
         src/libopenair/sqlite3pp.cpp
         src/libopenair/sqlite3pp.hpp
-        src/libopenair/network/linux.cpp src/libopenair/network/socket.hpp src/libopenair/network/socket.hpp)
+        src/libopenair/network/socket.cpp src/libopenair/network/socket.hpp src/libopenair/network/socket.hpp)
 
 set_source_files_properties(src/libopenair/sqlite3.c PROPERTIES COMPILE_FLAGS -DSQLITE_OMIT_LOAD_EXTENSION)
 
@@ -72,7 +72,7 @@ add_library(openair-core
         src/libopenair/sqlite3.h
         src/libopenair/sqlite3pp.cpp
         src/libopenair/sqlite3pp.hpp
-        src/libopenair/network/linux.cpp src/libopenair/network/socket.hpp src/libopenair/network/socket.hpp)
+        src/libopenair/network/socket.cpp src/libopenair/network/socket.hpp src/libopenair/network/socket.hpp)
 endif()
 
 add_executable(openair-test 

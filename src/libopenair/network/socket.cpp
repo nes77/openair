@@ -8,6 +8,7 @@
 
 openair::network::TCPSocket::TCPSocket(std::string hostname, uint16_t port) {
 
+    this->_closed = std::shared_ptr<bool>(new bool(false));
     this->sock_type = SocketType::CLIENT;
 
     addrinfo hint;
@@ -62,12 +63,16 @@ openair::network::TCPSocket::TCPSocket(std::string hostname, uint16_t port) {
 }
 
 openair::network::TCPSocket::TCPSocket(int sockfd, openair::network::SocketType type) {
+
+    this->_closed = std::shared_ptr<bool>(new bool(false));
     this->sock_type = type;
     this->sockfd = std::shared_ptr<int>(new int(sockfd));
 }
 
 
 openair::network::TCPSocket::TCPSocket(uint16_t port, uint32_t max_queued_connections) {
+
+    this->_closed = std::shared_ptr<bool>(new bool(false));
 
     this->sock_type = SocketType::SERVER;
 
@@ -170,8 +175,6 @@ void openair::network::TCPSocket::shutdown(openair::network::IOType type) {
         std::string errstr = strerror(error);
         throw NetworkingException(std::string("Error when shutting down socket: ").append(errstr));
     }
-
-    this->_shutdown = true;
 
 }
 
@@ -288,7 +291,6 @@ openair::network::TCPSocket::TCPSocket(std::string hostname, uint16_t port) {
 
 	initialize_winsock_data();
 	this->_closed = std::shared_ptr<bool>(new bool(false));
-	this->_shutdown = std::shared_ptr<bool>(new bool(false));
 
 	this->sock_type = SocketType::CLIENT;
 
@@ -352,7 +354,6 @@ openair::network::TCPSocket::TCPSocket(std::string hostname, uint16_t port) {
 openair::network::TCPSocket::TCPSocket(std::shared_ptr<SOCKET> socket, openair::network::SocketType type) {
 	initialize_winsock_data();
 	this->_closed = std::shared_ptr<bool>(new bool(false));
-	this->_shutdown = std::shared_ptr<bool>(new bool(false));
 	this->sock_type = type;
 	this->socket = socket;
 }
@@ -361,7 +362,6 @@ openair::network::TCPSocket::TCPSocket(std::shared_ptr<SOCKET> socket, openair::
 openair::network::TCPSocket::TCPSocket(uint16_t port, uint32_t max_queued_connections) {
 	initialize_winsock_data();
 	this->_closed = std::shared_ptr<bool>(new bool(false));
-	this->_shutdown = std::shared_ptr<bool>(new bool(false));
 	this->sock_type = SocketType::SERVER;
 
 	addrinfo hints;
@@ -474,8 +474,6 @@ void openair::network::TCPSocket::shutdown(openair::network::IOType type) {
 		LocalFree(s);
 		throw NetworkingException(std::string("Error when shutting down socket: ").append(errstr));
 	}
-
-	*this->_shutdown = true;
 
 }
 
@@ -591,10 +589,6 @@ ssize_t openair::network::TCPSocket::send(const void *buf, size_t len, int flags
 #endif // Windows
 
 // System-independent code
-
-bool openair::network::TCPSocket::is_shutdown() {
-	return *this->_shutdown;
-}
 
 bool openair::network::TCPSocket::is_closed() {
 	return *this->_closed;

@@ -28,7 +28,4 @@ int main(int argc, char **argv) {
 	ssize_t bytes_recv = client.recv(recv_buf, 256, 0);
 	assert(bytes_recv > 0);
 	std::cout << std::string(recv_buf) << std::endl;
-
-	client.close();
-	server.close();
 }
