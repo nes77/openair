@@ -50,7 +50,6 @@ if (NOT WIN32)
     #include_directories(/usr/include/x86_64-linux-gnu)
 add_library(openair-core
         SHARED
-        src/libopenair/airplane.cpp
         src/libopenair/parallel.hpp
         src/libopenair/common.hpp
         src/libopenair/sqlite3.c
@@ -65,7 +64,6 @@ set_source_files_properties(src/libopenair/sqlite3.c PROPERTIES COMPILE_FLAGS -D
 else()
 add_library(openair-core
         STATIC
-        src/libopenair/airplane.cpp
         src/libopenair/parallel.hpp
         src/libopenair/common.hpp
         src/libopenair/sqlite3.c
