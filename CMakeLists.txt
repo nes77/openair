@@ -3,18 +3,6 @@ project (openair)
 
 #set(CMAKE_VERBOSE_MAKEFILE on)
 
-## set up Boost
-#if (NOT DEFINED BOOST_ROOT AND
-#    NOT DEFINED ENV{BOOST_ROOT} AND
-#    NOT DEFINED BOOST_INCLUDEDIR AND
-#    NOT DEFINED ENV{BOOST_INCLUDEDIR} AND
-#    NOT DEFINED BOOST_LIBRARYDIR AND
-#    NOT DEFINED ENV{BOOST_LIBRARYDIR})
-#
-#    set(BOOST_ROOT "libs/boost")
-#
-#endif()
-#
 if (NOT WIN32)
 
 
@@ -56,7 +44,7 @@ add_library(openair-core
         src/libopenair/sqlite3.h
         src/libopenair/sqlite3pp.cpp
         src/libopenair/sqlite3pp.hpp
-        src/libopenair/network/socket.cpp src/libopenair/network/socket.hpp src/libopenair/network/socket.hpp)
+        src/libopenair/network/socket.cpp src/libopenair/network/socket.hpp src/libopenair/network/socket.hpp src/libopenair/world.hpp src/libopenair/world.cpp)
 
 set_source_files_properties(src/libopenair/sqlite3.c PROPERTIES COMPILE_FLAGS -DSQLITE_OMIT_LOAD_EXTENSION)
 
@@ -70,7 +58,7 @@ add_library(openair-core
         src/libopenair/sqlite3.h
         src/libopenair/sqlite3pp.cpp
         src/libopenair/sqlite3pp.hpp
-        src/libopenair/network/socket.cpp src/libopenair/network/socket.hpp src/libopenair/network/socket.hpp)
+        src/libopenair/network/socket.cpp src/libopenair/network/socket.hpp src/libopenair/network/socket.hpp src/libopenair/world.hpp src/libopenair/world.cpp)
 endif()
 
 add_executable(openair-test 
@@ -86,7 +74,16 @@ add_executable(sqlitepp-test
 
 add_executable(networking-test src/test/networking_test.cpp)
 
+add_executable(world-test src/test/world_test.cpp)
 
+target_compile_features(openair-core PUBLIC
+        cxx_auto_type
+        cxx_deleted_functions
+        cxx_lambdas
+        cxx_nullptr
+        cxx_range_for
+        cxx_raw_string_literals
+        )
 
 #message("Boost libs: " ${Boost_LIBRARIES})
 if(NOT WIN32)
@@ -97,7 +94,12 @@ endif()
 target_link_libraries(openair-test openair-core ${Boost_LIBRARIES})
 target_link_libraries(sqlitepp-test openair-core ${Boost_LIBRARIES})
 target_link_libraries(networking-test openair-core ${Boost_LIBRARIES})
+target_link_libraries(world-test openair-core ${Boost_LIBRARIES})
 target_link_libraries(openair-server openair-core ${Boost_LIBRARIES})
 
 enable_testing()
+
+add_test(NAME SQLTest COMMAND sqlitepp-test)
+add_test(NAME NetworkTest COMMAND networking-test)
+add_test(NAME WorldTest COMMAND world-test)
 
